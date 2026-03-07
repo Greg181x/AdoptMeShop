@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetMarket — Adopt Me Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --card2: #f0f2f8;
+    --border: #e8ecf4;
+    --border2: #d0d6e8;
+    --accent: #7c4dff;
+    --accent-hover: #6a3de8;
+    --accent-dim: rgba(124,77,255,0.08);
+    --accent2: #ff6b35;
+    --green: #4caf7d;
+    --green-dim: rgba(76,175,125,0.12);
+    --yellow: #f59e0b;
+    --text: #1a1d2e;
+    --text2: #6b7280;
+    --muted: #9ca3af;
+    --red: #ef4444;
+    --hot: #ef4444;
+    --shadow: 0 2px 12px rgba(100,100,160,0.10);
+    --shadow-hover: 0 8px 32px rgba(100,100,160,0.18);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+  .top-banner { background:linear-gradient(90deg,#7c4dff,#a855f7,#7c4dff); text-align:center; padding:8px 1rem; font-size:0.78rem; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#fff; }
+
+  header { position:sticky; top:0; z-index:100; background:#ffffff; border-bottom:1.5px solid var(--border); padding:0 2rem; height:64px; display:flex; align-items:center; gap:1.5rem; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+  .logo { font-family:'Nunito',sans-serif; font-size:1.5rem; font-weight:900; letter-spacing:-0.5px; color:var(--text); white-space:nowrap; display:flex; align-items:center; gap:0.45rem; }
+  .logo-icon { width:34px; height:34px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; box-shadow:0 3px 10px rgba(124,77,255,0.35); }
+  .logo span { color:var(--accent); }
+  nav { display:flex; gap:0.2rem; flex:1; }
+  nav a { padding:0.45rem 1rem; border-radius:8px; color:var(--text2); text-decoration:none; font-weight:700; font-size:0.88rem; transition:all 0.2s; }
+  nav a:hover { color:var(--text); background:var(--card2); }
+  nav a.active { color:var(--accent); background:var(--accent-dim); }
+
+  .header-right { display:flex; align-items:center; gap:0.6rem; margin-left:auto; }
+  .btn { padding:0.5rem 1.25rem; border-radius:10px; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.88rem; cursor:pointer; border:none; transition:all 0.2s; }
+  .btn-outline { background:transparent; border:2px solid var(--border2); color:var(--text2); }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-primary { background:var(--accent); color:#fff; box-shadow:0 3px 12px rgba(124,77,255,0.35); }
+  .btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); box-shadow:0 6px 18px rgba(124,77,255,0.4); }
+
+  /* Header nav icons */
+  .header-nav-icons { display:flex; align-items:center; gap:0.1rem; }
+  .hni-btn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:0.35rem 0.7rem; border-radius:10px; cursor:pointer; transition:background 0.18s; border:none; background:transparent; font-family:'Nunito',sans-serif; position:relative; }
+  .hni-btn:hover { background:var(--card2); }
+  .hni-btn .hni-icon { font-size:1.25rem; line-height:1; }
+  .hni-btn .hni-label { font-size:0.65rem; font-weight:700; color:var(--text2); white-space:nowrap; }
+  .hni-badge { position:absolute; top:4px; right:8px; width:14px; height:14px; background:var(--red); border-radius:50%; border:2px solid #fff; font-size:0.55rem; font-weight:900; color:#fff; display:flex; align-items:center; justify-content:center; }
+  .hni-avatar { width:36px; height:36px; border-radius:50%; border:2.5px solid var(--accent); background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:1.1rem; cursor:pointer; overflow:hidden; transition:border-color 0.2s; }
+  .hni-avatar:hover { border-color:var(--accent-hover); }
+
+  .coins-badge { display:flex; align-items:center; gap:0.4rem; background:linear-gradient(135deg,#fff9e6,#fffbe0); border:2px solid #f8d66d; border-radius:10px; padding:0.42rem 0.9rem; font-weight:800; font-size:0.88rem; color:#b45309; }
+  .coins-badge::before { content:'🪙'; font-size:0.95rem; }
+  .user-badge { display:flex; align-items:center; gap:0.5rem; background:var(--card2); border:2px solid var(--border); border-radius:10px; padding:0.38rem 0.9rem 0.38rem 0.5rem; font-weight:800; font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
+  .user-badge:hover { border-color:var(--accent); }
+  .user-avatar { width:28px; height:28px; border-radius:8px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:0.85rem; }
+
+  .filter-bar { background:#fff; border-bottom:1.5px solid var(--border); padding:0.6rem 2rem; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+  .pill { display:flex; align-items:center; gap:0.3rem; padding:0.38rem 1rem; border-radius:20px; border:2px solid var(--border); background:#fff; color:var(--text2); font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+  .pill:hover { border-color:var(--accent); color:var(--accent); }
+  .pill.active { background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 2px 8px rgba(124,77,255,0.25); }
+  .pill.hot-sale { background:#fef2f2; border-color:#fca5a5; color:#ef4444; }
+  .pill.hot-sale.active { background:#ef4444; border-color:#ef4444; color:#fff; }
+  .pill.new-pill { background:#f0fdf4; border-color:#86efac; color:#16a34a; }
+  .pill.new-pill.active { background:#22c55e; border-color:#22c55e; color:#fff; }
+
+  .search-bar { padding:0.85rem 2rem; display:flex; gap:0.75rem; align-items:center; background:#fff; border-bottom:1.5px solid var(--border); }
+  .search-wrap { flex:1; position:relative; max-width:520px; }
+  .search-wrap input { width:100%; background:var(--bg); border:2px solid var(--border); border-radius:12px; padding:0.65rem 1rem 0.65rem 2.8rem; color:var(--text); font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:600; outline:none; transition:border-color 0.2s; }
+  .search-wrap input:focus { border-color:var(--accent); background:#fff; }
+  .search-wrap input::placeholder { color:var(--muted); }
+  .search-icon { position:absolute; left:0.9rem; top:50%; transform:translateY(-50%); color:var(--muted); font-size:1rem; }
+  .search-btn { background:var(--accent); border:none; border-radius:10px; padding:0.65rem 1.25rem; color:#fff; cursor:pointer; font-size:1rem; font-weight:800; transition:all 0.2s; box-shadow:0 2px 8px rgba(124,77,255,0.3); }
+  .search-btn:hover { background:var(--accent-hover); }
+  .sort-select { background:#fff; border:2px solid var(--border); color:var(--text); border-radius:10px; padding:0.5rem 1rem; font-family:'Nunito',sans-serif; font-weight:700; font-size:0.85rem; cursor:pointer; outline:none; margin-left:auto; }
+
+  .layout { display:flex; min-height:calc(100vh - 220px); }
+  aside { width:240px; min-width:240px; background:#fff; border-right:1.5px solid var(--border); padding:1.5rem 1rem; }
+  .sidebar-section { margin-bottom:1.75rem; }
+  .sidebar-title { font-size:0.75rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:0.65rem; padding:0 0.5rem; }
+  .sidebar-reset { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.6rem; border-radius:6px; background:var(--bg); border:1.5px solid var(--border2); color:var(--muted); font-size:0.7rem; font-weight:800; cursor:pointer; transition:all 0.2s; margin-left:auto; }
+  .sidebar-reset:hover { color:var(--red); border-color:var(--red); background:#fef2f2; }
+  .sidebar-section-header { display:flex; align-items:center; padding:0 0.5rem; margin-bottom:0.65rem; }
+  .sidebar-section-header .sidebar-title { margin-bottom:0; padding:0; }
+  .sidebar-item { display:flex; align-items:center; gap:0.65rem; padding:0.5rem 0.75rem; border-radius:10px; cursor:pointer; color:var(--text2); font-weight:700; font-size:0.88rem; transition:all 0.2s; user-select:none; }
+  .sidebar-item:hover { background:var(--card2); color:var(--text); }
+  .sidebar-item.active { background:var(--accent-dim); color:var(--accent); }
+  .sidebar-item .icon { font-size:1rem; width:20px; text-align:center; }
+  .sidebar-item .count { margin-left:auto; background:var(--card2); border-radius:6px; padding:0.1rem 0.5rem; font-size:0.72rem; color:var(--muted); font-weight:800; }
+  .sidebar-item.active .count { background:var(--accent-dim); color:var(--accent); }
+  .rarity-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .check-item { display:flex; align-items:center; gap:0.6rem; padding:0.4rem 0.75rem; border-radius:8px; cursor:pointer; color:var(--text2); font-weight:700; font-size:0.85rem; transition:all 0.2s; user-select:none; }
+  .check-item:hover { background:var(--card2); }
+  .check-box { width:18px; height:18px; border-radius:5px; border:2px solid var(--border2); background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; }
+  .check-box.checked { background:var(--accent); border-color:var(--accent); }
+  .check-box.checked::after { content:'✓'; color:#fff; font-size:0.7rem; font-weight:900; }
+  .neon-badge { width:16px; height:16px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:900; color:#fff; }
+
+  /* Dual-handle price range slider */
+  .price-range-wrap { padding:0 0.75rem; }
+  .price-inputs { display:flex; gap:0.5rem; margin-bottom:0.75rem; }
+  .price-inp-box { flex:1; }
+  .price-inp-lbl { font-size:0.65rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; }
+  .price-inp { width:100%; border:2px solid var(--border); border-radius:8px; padding:6px 8px; font-size:0.8rem; font-weight:700; color:var(--text); font-family:'Nunito',sans-serif; outline:none; background:#fff; transition:border-color 0.2s; }
+  .price-inp:focus { border-color:var(--accent); }
+  .dual-range-wrap { position:relative; height:28px; margin-bottom:0.5rem; }
+  .dual-range-track { position:absolute; top:50%; left:0; right:0; height:4px; background:var(--border); border-radius:2px; transform:translateY(-50%); pointer-events:none; }
+  .dual-range-fill { position:absolute; top:50%; height:4px; background:var(--accent); border-radius:2px; transform:translateY(-50%); pointer-events:none; }
+  .dual-range-wrap input[type=range] { position:absolute; width:100%; height:100%; top:0; left:0; -webkit-appearance:none; appearance:none; background:transparent; pointer-events:none; outline:none; }
+  .dual-range-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:#fff; border:2.5px solid var(--accent); box-shadow:0 2px 6px rgba(124,77,255,0.3); cursor:pointer; pointer-events:all; transition:transform 0.15s, box-shadow 0.15s; }
+  .dual-range-wrap input[type=range]::-webkit-slider-thumb:hover { transform:scale(1.2); box-shadow:0 3px 10px rgba(124,77,255,0.45); }
+  .dual-range-wrap input[type=range]::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:#fff; border:2.5px solid var(--accent); box-shadow:0 2px 6px rgba(124,77,255,0.3); cursor:pointer; pointer-events:all; }
+  .price-apply-btn { width:100%; background:var(--accent); border:none; border-radius:8px; padding:7px; color:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.78rem; cursor:pointer; transition:all 0.2s; margin-top:0.4rem; }
+  .price-apply-btn:hover { background:var(--accent-hover); }
+
+  main { flex:1; padding:1.5rem; background:var(--bg); }
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+  .section-header h2 { font-size:1rem; font-weight:800; color:var(--text2); display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+  .section-header h2 .found-icon { color:var(--accent); }
+  .section-header h2 strong { color:var(--text); }
+  .sort-label { font-size:0.85rem; font-weight:700; color:var(--text2); display:flex; align-items:center; gap:0.5rem; }
+  .active-filters { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem; }
+  .active-filter-tag { display:inline-flex; align-items:center; gap:0.3rem; background:var(--accent-dim); border:1.5px solid rgba(124,77,255,0.2); border-radius:20px; padding:0.2rem 0.6rem 0.2rem 0.75rem; font-size:0.75rem; font-weight:800; color:var(--accent); cursor:pointer; transition:all 0.2s; }
+  .active-filter-tag:hover { background:rgba(124,77,255,0.15); }
+  .active-filter-tag .remove-tag { font-size:0.7rem; opacity:0.7; margin-left:2px; }
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(195px,1fr)); gap:1rem; }
+  .no-results { grid-column:1/-1; text-align:center; padding:3rem 1rem; color:var(--muted); }
+  .no-results-emoji { font-size:3rem; margin-bottom:0.75rem; }
+  .no-results h3 { font-size:1.1rem; font-weight:800; color:var(--text2); margin-bottom:0.5rem; }
+  .no-results p { font-size:0.85rem; font-weight:600; }
+
+  .pet-card { background:#fff; border:2px solid var(--border); border-radius:16px; overflow:hidden; cursor:pointer; transition:all 0.25s; position:relative; box-shadow:var(--shadow); }
+  .pet-card:hover { border-color:var(--accent); transform:translateY(-4px); box-shadow:var(--shadow-hover); }
+  .card-img { width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; padding:1rem; }
+  .card-img-stars { position:absolute; inset:0; opacity:0.6; }
+  .star-svg { position:absolute; }
+  .card-img-pet { position:relative; z-index:2; width:75%; height:75%; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.15)); transition:transform 0.2s; }
+  .pet-card:hover .card-img-pet { transform:scale(1.07); }
+  .card-img-emoji { position:relative; z-index:2; font-size:4rem; display:none; transition:transform 0.2s; }
+  .pet-card:hover .card-img-emoji { transform:scale(1.07); }
+  .hot-badge { position:absolute; top:0.55rem; left:0.55rem; background:#ef4444; color:#fff; font-size:0.65rem; font-weight:800; padding:0.18rem 0.5rem; border-radius:6px; z-index:3; letter-spacing:0.3px; text-transform:uppercase; display:flex; align-items:center; gap:3px; }
+  .wishlist-btn { position:absolute; top:0.55rem; right:0.55rem; width:30px; height:30px; background:#fff; border:2px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.85rem; z-index:3; cursor:pointer; transition:all 0.2s; }
+  .wishlist-btn:hover { border-color:#ef4444; }
+  .wishlist-btn.wishlisted { border-color:#ef4444; background:#fef2f2; }
+  .card-info { padding:0.75rem; }
+  .card-price-row { display:flex; align-items:baseline; gap:0.4rem; margin-bottom:0.3rem; }
+  .price-main { font-size:1.25rem; font-weight:900; color:var(--text); }
+  .price-old { font-size:0.8rem; font-weight:600; color:var(--muted); text-decoration:line-through; }
+  .card-name { font-weight:700; font-size:0.82rem; color:var(--text2); margin-bottom:0.55rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-rarity-row { display:flex; align-items:center; gap:0.4rem; margin-bottom:0.6rem; }
+  .neon-icon { width:18px; height:18px; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:900; color:#fff; flex-shrink:0; }
+  .add-to-cart { width:100%; background:var(--accent); border:none; border-radius:10px; padding:0.55rem; color:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.82rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:0.35rem; box-shadow:0 2px 8px rgba(124,77,255,0.25); }
+  .add-to-cart:hover { background:var(--accent-hover); transform:translateY(-1px); box-shadow:0 4px 14px rgba(124,77,255,0.35); }
+  .out-of-stock .add-to-cart { background:var(--card2); color:var(--muted); box-shadow:none; cursor:not-allowed; }
+  .out-of-stock .add-to-cart:hover { background:var(--card2); transform:none; }
+
+  .modal-overlay { display:none; position:fixed; inset:0; z-index:500; background:rgba(15,10,40,0.55); backdrop-filter:blur(8px); align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#fff; border:2px solid var(--border); border-radius:20px; width:min(540px,95vw); max-height:90vh; overflow-y:auto; position:relative; animation:slideUp 0.25s ease; box-shadow:0 20px 60px rgba(0,0,0,0.15); }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .modal-header { padding:1.5rem 1.5rem 0; display:flex; align-items:flex-start; gap:1.25rem; }
+  .modal-pet-img { width:110px; height:110px; border-radius:16px; background:var(--bg); border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden; }
+  .modal-pet-bg { position:absolute; inset:0; opacity:0.5; }
+  .modal-pet-image { position:relative; z-index:1; width:85%; height:85%; object-fit:contain; }
+  .modal-pet-emoji { position:relative; z-index:1; font-size:3.5rem; display:none; }
+  .modal-meta { flex:1; }
+  .modal-name { font-size:1.6rem; font-weight:900; letter-spacing:-0.5px; margin-bottom:0.4rem; }
+  .modal-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem; }
+  .modal-price-row { display:flex; align-items:center; gap:1rem; }
+  .modal-price { font-size:1.8rem; font-weight:900; color:var(--text); }
+  .close-btn { position:absolute; top:1rem; right:1rem; width:32px; height:32px; border-radius:8px; background:var(--card2); border:2px solid var(--border); color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.85rem; transition:all 0.2s; }
+  .close-btn:hover { color:var(--text); border-color:var(--border2); }
+  .modal-body { padding:1.25rem 1.5rem 1.5rem; }
+  .modal-section { margin-bottom:1.25rem; }
+  .modal-section-title { font-size:0.7rem; font-weight:800; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:0.6rem; }
+  .stats-row { display:flex; gap:0.6rem; }
+  .stat-box { flex:1; background:var(--bg); border-radius:12px; padding:0.75rem; text-align:center; border:2px solid var(--border); }
+  .stat-box-val { font-size:1.1rem; font-weight:900; color:var(--text); }
+  .stat-box-lbl { font-size:0.68rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .price-history { background:var(--bg); border-radius:12px; padding:1rem; border:2px solid var(--border); }
+  .sparkline { display:flex; align-items:flex-end; gap:4px; height:40px; }
+  .spark-bar { flex:1; border-radius:3px 3px 0 0; background:linear-gradient(to top,var(--accent),rgba(124,77,255,0.25)); min-width:0; }
+  .modal-actions { display:flex; gap:0.6rem; margin-top:1.25rem; }
+  .modal-buy { flex:1; background:var(--accent); border:none; border-radius:12px; color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:0.95rem; padding:0.9rem; cursor:pointer; transition:all 0.2s; box-shadow:0 3px 14px rgba(124,77,255,0.35); }
+  .modal-buy:hover { background:var(--accent-hover); transform:translateY(-1px); }
+  .modal-offer { flex:0.5; background:transparent; border:2px solid var(--border2); border-radius:12px; color:var(--text2); font-family:'Nunito',sans-serif; font-weight:900; font-size:0.95rem; padding:0.9rem; cursor:pointer; transition:all 0.2s; }
+  .modal-offer:hover { border-color:var(--accent); color:var(--accent); }
+  .rarity-badge { display:inline-flex; align-items:center; gap:3px; padding:0.2rem 0.55rem; border-radius:6px; font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; }
+  .rb-legendary { background:#fef3c7; color:#b45309; }
+  .rb-ultra-rare { background:#ede9fe; color:#7c3aed; }
+  .rb-rare { background:#dcfce7; color:#15803d; }
+  .rb-common { background:#f3f4f6; color:#6b7280; }
+  .rb-neon { background:#fce7f3; color:#be185d; }
+
+  .auth-modal { background:#fff; border:2px solid var(--border); border-radius:20px; width:min(440px,95vw); padding:2rem; position:relative; animation:slideUp 0.25s ease; box-shadow:0 20px 60px rgba(0,0,0,0.12); }
+  .auth-tabs { display:flex; gap:4px; background:var(--bg); border-radius:10px; padding:4px; margin-bottom:1.75rem; border:2px solid var(--border); }
+  .auth-tab { flex:1; padding:8px; border-radius:8px; border:none; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
+  .auth-tab.active { background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(124,77,255,0.3); }
+  .auth-tab.inactive { background:transparent; color:var(--muted); }
+  .form-group { margin-bottom:1rem; }
+  .form-label { display:block; font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text2); margin-bottom:6px; }
+  .form-input { width:100%; padding:10px 14px; background:var(--bg); border:2px solid var(--border); border-radius:10px; color:var(--text); font-family:'Nunito',sans-serif; font-size:0.9rem; font-weight:600; outline:none; transition:border-color 0.2s; }
+  .form-input:focus { border-color:var(--accent); background:#fff; }
+  .form-input::placeholder { color:var(--muted); }
+  .pass-wrap { position:relative; }
+  .pass-wrap .form-input { padding-right:44px; }
+  .pass-eye { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; }
+  .form-error { display:none; background:#fef2f2; border:2px solid #fca5a5; border-radius:10px; padding:10px 14px; color:var(--red); font-size:0.82rem; font-weight:700; margin-bottom:1rem; }
+  .form-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+  .btn-full { width:100%; padding:12px; border-radius:12px; background:var(--accent); border:none; color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:0.95rem; cursor:pointer; transition:all 0.2s; margin-top:0.5rem; box-shadow:0 3px 12px rgba(124,77,255,0.35); }
+  .btn-full:hover { background:var(--accent-hover); transform:translateY(-1px); }
+  .auth-switch { text-align:center; margin-top:1.25rem; font-size:0.85rem; color:var(--muted); font-weight:600; }
+  .auth-switch a { color:var(--accent); font-weight:800; text-decoration:none; cursor:pointer; }
+
+  .sell-modal { background:#fff; border:2px solid var(--border); border-radius:20px; width:min(500px,95vw); max-height:90vh; overflow-y:auto; padding:2rem; position:relative; animation:slideUp 0.25s ease; box-shadow:0 20px 60px rgba(0,0,0,0.12); }
+  .sell-preview { display:flex; align-items:center; gap:1rem; background:var(--bg); border:2px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1.25rem; }
+  .sell-preview-emoji { width:58px; height:58px; border-radius:12px; background:#fff; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:2.2rem; }
+  .tag-toggle { padding:6px 14px; border-radius:8px; border:2px solid var(--border); background:#fff; color:var(--text2); font-family:'Nunito',sans-serif; font-weight:700; font-size:0.78rem; cursor:pointer; transition:all 0.2s; }
+  .tag-toggle:hover { border-color:var(--accent); color:var(--accent); }
+  .tag-toggle.on { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+  .sell-actions { display:flex; gap:0.75rem; margin-top:0.5rem; }
+  .btn-cancel { flex:0.4; padding:12px; border-radius:12px; background:transparent; border:2px solid var(--border); color:var(--muted); font-family:'Nunito',sans-serif; font-weight:800; font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
+  .btn-cancel:hover { border-color:var(--border2); color:var(--text2); }
+
+  .toast { position:fixed; bottom:2rem; right:2rem; z-index:1000; background:#fff; border:2px solid var(--border); border-radius:14px; padding:0.9rem 1.35rem; display:flex; align-items:center; gap:0.75rem; box-shadow:0 8px 32px rgba(0,0,0,0.12); transform:translateY(100px); opacity:0; transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1); pointer-events:none; font-weight:700; font-size:0.9rem; border-left:4px solid var(--accent); }
+  .toast.show { transform:translateY(0); opacity:1; }
+  .toast-icon { font-size:1.3rem; }
+
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+  /* ── PAGE VIEWS ── */
+  .page-view { display:none; padding:2rem; max-width:1100px; margin:0 auto; }
+  .page-view.active { display:block; }
+  .page-title { font-size:1.6rem; font-weight:900; margin-bottom:0.4rem; display:flex; align-items:center; gap:0.6rem; }
+  .page-subtitle { color:var(--muted); font-size:0.88rem; font-weight:600; margin-bottom:1.75rem; }
+  .page-empty { text-align:center; padding:4rem 1rem; color:var(--muted); }
+  .page-empty-icon { font-size:3.5rem; margin-bottom:1rem; }
+  .page-empty h3 { font-size:1.1rem; font-weight:800; color:var(--text2); margin-bottom:0.5rem; }
+  .page-empty p { font-size:0.85rem; font-weight:600; margin-bottom:1.5rem; }
+  .cart-layout { display:grid; grid-template-columns:1fr 320px; gap:1.5rem; align-items:start; }
+  .cart-items { display:flex; flex-direction:column; gap:0.75rem; }
+  .cart-item { background:#fff; border:2px solid var(--border); border-radius:14px; padding:1rem; display:flex; align-items:center; gap:1rem; transition:border-color 0.2s; }
+  .cart-item:hover { border-color:var(--accent); }
+  .cart-item-img { width:64px; height:64px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:2.2rem; flex-shrink:0; }
+  .cart-item-info { flex:1; }
+  .cart-item-name { font-weight:800; font-size:0.95rem; margin-bottom:0.25rem; }
+  .cart-item-meta { font-size:0.78rem; color:var(--muted); font-weight:600; }
+  .cart-item-price { font-size:1.15rem; font-weight:900; color:var(--accent); margin-right:0.5rem; }
+  .cart-item-remove { width:30px; height:30px; border-radius:8px; border:2px solid var(--border); background:transparent; cursor:pointer; color:var(--muted); font-size:0.85rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+  .cart-item-remove:hover { border-color:var(--red); color:var(--red); background:#fef2f2; }
+  .cart-summary { background:#fff; border:2px solid var(--border); border-radius:16px; padding:1.5rem; position:sticky; top:80px; }
+  .cart-summary-title { font-size:1rem; font-weight:800; margin-bottom:1.25rem; }
+  .cart-summary-row { display:flex; justify-content:space-between; font-size:0.88rem; font-weight:700; margin-bottom:0.7rem; color:var(--text2); }
+  .cart-summary-row.total { font-size:1.1rem; font-weight:900; color:var(--text); border-top:2px solid var(--border); padding-top:0.75rem; margin-top:0.75rem; }
+  .cart-checkout { width:100%; background:var(--accent); border:none; border-radius:12px; padding:0.9rem; color:#fff; font-family:'Nunito',sans-serif; font-weight:900; font-size:0.95rem; cursor:pointer; margin-top:1rem; transition:all 0.2s; box-shadow:0 3px 12px rgba(124,77,255,0.35); }
+  .cart-checkout:hover { background:var(--accent-hover); transform:translateY(-1px); }
+  .inv-items-grid { display:flex; flex-direction:column; gap:0.75rem; }
+  .inv-item { background:#fff; border:2px solid var(--border); border-radius:14px; padding:1rem; display:flex; align-items:center; gap:1rem; transition:border-color 0.2s; }
+  .inv-item:hover { border-color:var(--accent); }
+  .inv-item-img { width:60px; height:60px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:2rem; flex-shrink:0; }
+  .inv-item-info { flex:1; }
+  .inv-item-name { font-weight:800; font-size:0.95rem; margin-bottom:0.2rem; }
+  .inv-item-meta { font-size:0.78rem; color:var(--muted); font-weight:600; }
+  .inv-badge { display:inline-flex; align-items:center; gap:0.25rem; background:var(--green-dim); border:1.5px solid var(--green); color:var(--green); border-radius:6px; padding:0.15rem 0.5rem; font-size:0.7rem; font-weight:800; }
+  .page-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1.1rem; }
+
+  @media(max-width:768px) {
+    header { padding:0 1rem; }
+    nav { display:none; }
+    aside { display:none; }
+    .cards-grid { grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); }
+    .search-bar { padding:0.75rem 1rem; flex-wrap:wrap; }
+    main { padding:1rem; }
+    .game-bar { padding:0.5rem 1rem; flex-wrap:wrap; }
+    .header-nav-icons .hni-label { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🐾</div>
+    Pet<span>Market</span>
+  </div>
+  <nav id="mainNav">
+    <a href="#" class="active" onclick="showPage('marketplace',this)">Marketplace</a>
+  </nav>
+  <div class="header-right" id="headerRight">
+    <button class="btn btn-outline" onclick="openAuthModal('login')">Login</button>
+    <button class="btn btn-primary" onclick="openAuthModal('signup')">Register</button>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="pill" id="pill-all" onclick="setTopFilter('all',this)">🐾 All</div>
+  <div class="pill hot-sale active" id="pill-hot" onclick="setTopFilter('hot',this)">🔥 Hot Sale</div>
+  <div class="pill new-pill" id="pill-new" onclick="setTopFilter('new',this)">✦ New</div>
+  <div class="pill" id="pill-fly" onclick="setTopFilter('fly',this)">🦅 Fly</div>
+  <div class="pill" id="pill-ride" onclick="setTopFilter('ride',this)">🐴 Ride</div>
+  <div class="pill" id="pill-legendary" onclick="setTopFilter('legendary',this)">⭐ Legendary</div>
+  <div class="pill" id="pill-neon" onclick="setTopFilter('neon',this)">🌈 Neon</div>
+  <div class="pill" id="pill-ultra-rare" onclick="setTopFilter('ultra-rare',this)">💎 Ultra Rare</div>
+  <div class="pill" id="pill-rare" onclick="setTopFilter('rare',this)">✨ Rare</div>
+  <div class="pill" id="pill-common" onclick="setTopFilter('common',this)">🐾 Common</div>
+</div>
+
+<div class="search-bar">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search pets, eggs, items..." id="searchInput" oninput="applyAllFilters()">
+  </div>
+  <button class="search-btn" onclick="applyAllFilters()">🔍</button>
+  <select class="sort-select" onchange="currentSort=this.value;applyAllFilters()">
+    <option value="popular">🔥 Popular first</option>
+    <option value="price-asc">Price: Low → High</option>
+    <option value="price-desc">Price: High → Low</option>
+    <option value="newest">Newest</option>
+  </select>
+</div>
+
+<div class="layout">
+  <aside>
+    <!-- PRICE RANGE with dual slider -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-header">
+        <div class="sidebar-title">Item Price</div>
+        <button class="sidebar-reset" onclick="resetPriceFilter()" title="Reset price">✕ Reset</button>
+      </div>
+      <div class="price-range-wrap">
+        <div class="price-inputs">
+          <div class="price-inp-box">
+            <div class="price-inp-lbl">From</div>
+            <input class="price-inp" id="priceFrom" type="number" value="0" placeholder="€0" min="0" oninput="syncSliderFromInputs()">
+          </div>
+          <div class="price-inp-box">
+            <div class="price-inp-lbl">To</div>
+            <input class="price-inp" id="priceTo" type="number" value="1000" placeholder="€1000" min="0" oninput="syncSliderFromInputs()">
+          </div>
+        </div>
+        <div class="dual-range-wrap">
+          <div class="dual-range-track"></div>
+          <div class="dual-range-fill" id="rangeFill"></div>
+          <input type="range" id="rangeMin" min="0" max="1000" value="0" step="1" oninput="onRangeMin()">
+          <input type="range" id="rangeMax" min="0" max="1000" value="1000" step="1" oninput="onRangeMax()">
+        </div>
+        <button class="price-apply-btn" onclick="applyAllFilters()">Apply Price Filter</button>
+      </div>
+    </div>
+
+    <!-- PROPERTIES -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-header">
+        <div class="sidebar-title">Properties</div>
+        <button class="sidebar-reset" onclick="resetProperties()" title="Reset">✕</button>
+      </div>
+      <div class="check-item" onclick="toggleProp('default',this)"><div class="check-box" id="prop-default"></div>Default</div>
+      <div class="check-item" onclick="toggleProp('neon',this)"><div class="check-box" id="prop-neon"></div><span class="neon-badge" style="background:#7c4dff">N</span>Neon</div>
+      <div class="check-item" onclick="toggleProp('mega',this)"><div class="check-box" id="prop-mega"></div><span class="neon-badge" style="background:#a855f7">M</span>Mega-Neon</div>
+      <div class="check-item" onclick="toggleProp('fly',this)"><div class="check-box" id="prop-fly"></div><span class="neon-badge" style="background:#3b82f6">F</span>Fly</div>
+      <div class="check-item" onclick="toggleProp('ride',this)"><div class="check-box" id="prop-ride"></div><span class="neon-badge" style="background:#ef4444">R</span>Ride</div>
+    </div>
+
+    <!-- RARITY -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-header">
+        <div class="sidebar-title">Rarity</div>
+        <button class="sidebar-reset" onclick="resetRarities()" title="Reset">✕</button>
+      </div>
+      <div class="check-item" onclick="toggleRarity('common',this)"><div class="check-box" id="rar-common"></div><span class="rarity-dot" style="background:#f59e0b"></span>Common<span class="count" style="margin-left:auto" id="cnt-common">0</span></div>
+      <div class="check-item" onclick="toggleRarity('uncommon',this)"><div class="check-box" id="rar-uncommon"></div><span class="rarity-dot" style="background:#818cf8"></span>Uncommon<span class="count" style="margin-left:auto" id="cnt-uncommon">0</span></div>
+      <div class="check-item" onclick="toggleRarity('rare',this)"><div class="check-box" id="rar-rare"></div><span class="rarity-dot" style="background:#4ade80"></span>Rare<span class="count" style="margin-left:auto" id="cnt-rare">0</span></div>
+      <div class="check-item" onclick="toggleRarity('ultra-rare',this)"><div class="check-box" id="rar-ultra-rare"></div><span class="rarity-dot" style="background:#a855f7"></span>Ultra-Rare<span class="count" style="margin-left:auto" id="cnt-ultra-rare">0</span></div>
+      <div class="check-item" onclick="toggleRarity('legendary',this)"><div class="check-box" id="rar-legendary"></div><span class="rarity-dot" style="background:#f59e0b"></span>Legendary<span class="count" style="margin-left:auto" id="cnt-legendary">0</span></div>
+      <div class="check-item" onclick="toggleRarity('neon',this)"><div class="check-box" id="rar-neon"></div><span class="rarity-dot" style="background:#be185d"></span>Neon<span class="count" style="margin-left:auto" id="cnt-neon">0</span></div>
+    </div>
+
+    <!-- AGE -->
+    <div class="sidebar-section">
+      <div class="sidebar-section-header">
+        <div class="sidebar-title">Age</div>
+        <button class="sidebar-reset" onclick="resetAge()" title="Reset">✕</button>
+      </div>
+      <div class="sidebar-item" id="age-Newborn" onclick="selectAge('Newborn',this)"><span class="icon">🍼</span>Newborn</div>
+      <div class="sidebar-item" id="age-Junior" onclick="selectAge('Junior',this)"><span class="icon">👶</span>Junior</div>
+      <div class="sidebar-item" id="age-Pre-Teen" onclick="selectAge('Pre-Teen',this)"><span class="icon">🧒</span>Pre-Teen</div>
+      <div class="sidebar-item" id="age-Teen" onclick="selectAge('Teen',this)"><span class="icon">🧑</span>Teen</div>
+      <div class="sidebar-item" id="age-Post-Teen" onclick="selectAge('Post-Teen',this)"><span class="icon">🧓</span>Post-Teen</div>
+      <div class="sidebar-item" id="age-Full Grown" onclick="selectAge('Full Grown',this)"><span class="icon">✅</span>Full Grown</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="section-header">
+      <h2><span class="found-icon">🔍</span> Found: <strong id="countBadge">24 items</strong></h2>
+      <div class="sort-label" id="sortLabel">Sorting: 🔥 Popular first</div>
+    </div>
+    <div class="active-filters" id="activeFilters"></div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </main>
+</div>
+
+<!-- WISHLIST PAGE -->
+<div class="page-view" id="pageWishlist">
+  <div class="page-title">❤️ Wishlist</div>
+  <div class="page-subtitle" id="wlSubtitle">Your saved pets</div>
+  <div id="wlContent"></div>
+</div>
+
+<!-- CART PAGE -->
+<div class="page-view" id="pageCart">
+  <div class="page-title">🛒 Cart</div>
+  <div class="page-subtitle" id="cartSubtitle">Review your items before checkout</div>
+  <div id="cartContent"></div>
+</div>
+
+<!-- INVENTORY PAGE -->
+<div class="page-view" id="pageInventory">
+  <div class="page-title">🎒 Inventory</div>
+  <div class="page-subtitle" id="invSubtitle">Pets you own</div>
+  <div id="invContent"></div>
+</div>
+
+<!-- PET DETAIL MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <div class="modal-pet-img">
+        <div class="modal-pet-bg" id="modalBg"></div>
+        <img class="modal-pet-image" id="modalPetImg" src="" alt="" onerror="this.style.display='none';document.getElementById('modalEmoji').style.display='block'">
+        <span class="modal-pet-emoji" id="modalEmoji"></span>
+      </div>
+      <div class="modal-meta">
+        <div class="modal-name" id="modalName"></div>
+        <div class="modal-tags" id="modalTags"></div>
+        <div class="modal-price-row"><div class="modal-price" id="modalPrice"></div></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">Stats</div>
+        <div class="stats-row">
+          <div class="stat-box"><div class="stat-box-val" id="mAge">—</div><div class="stat-box-lbl">Age</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="mDemand">—</div><div class="stat-box-lbl">Demand</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="mOffers">—</div><div class="stat-box-lbl">Offers</div></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">Price History (7d)</div>
+        <div class="price-history"><div class="sparkline" id="sparkline"></div></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-buy" id="modalBuyBtn">🛒 Buy Now</button>
+        <button class="modal-offer">Make Offer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authOverlay" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-modal">
+    <button class="close-btn" onclick="closeAuthModal()">✕</button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+      <button class="auth-tab inactive" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div id="formLogin">
+      <div style="text-align:center;margin-bottom:1.5rem;"><div style="font-size:2.2rem;margin-bottom:0.4rem;">👋</div><div style="font-size:1.5rem;font-weight:900;margin-bottom:0.2rem;">Welcome Back</div><div style="color:var(--muted);font-size:0.85rem;font-weight:600;">Log in to buy, sell and trade pets.</div></div>
+      <div class="form-group"><label class="form-label">Username or Email</label><input class="form-input" id="loginEmail" type="text" placeholder="e.g. PetTrader99" oninput="clearError('loginError')"></div>
+      <div class="form-group"><label class="form-label">Password</label><div class="pass-wrap"><input class="form-input" id="loginPass" type="password" placeholder="••••••••" oninput="clearError('loginError')"><button class="pass-eye" onclick="togglePass('loginPass')">👁</button></div><div style="text-align:right;margin-top:6px;"><a href="#" style="color:var(--accent);font-size:0.78rem;font-weight:800;text-decoration:none;">Forgot password?</a></div></div>
+      <div class="form-error" id="loginError"></div>
+      <button class="btn-full" onclick="doLogin()">Log In →</button>
+      <div class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Sign up free</a></div>
+    </div>
+    <div id="formSignup" style="display:none">
+      <div style="text-align:center;margin-bottom:1.5rem;"><div style="font-size:2.2rem;margin-bottom:0.4rem;">🐾</div><div style="font-size:1.5rem;font-weight:900;margin-bottom:0.2rem;">Create Account</div><div style="color:var(--muted);font-size:0.85rem;font-weight:600;">Join thousands of Adopt Me traders!</div></div>
+      <div class="form-grid2"><div class="form-group"><label class="form-label">Username</label><input class="form-input" id="signupUser" type="text" placeholder="PetTrader99" oninput="clearError('signupError')"></div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="signupEmail" type="email" placeholder="you@email.com" oninput="clearError('signupError')"></div></div>
+      <div class="form-group"><label class="form-label">Password</label><div class="pass-wrap"><input class="form-input" id="signupPass" type="password" placeholder="Min. 6 characters" oninput="clearError('signupError')"><button class="pass-eye" onclick="togglePass('signupPass')">👁</button></div></div>
+      <div class="form-group"><label class="form-label">Roblox Username</label><input class="form-input" id="signupRoblox" type="text" placeholder="Your Roblox name"></div>
+      <div class="form-error" id="signupError"></div>
+      <button class="btn-full" onclick="doSignup()">Create Account →</button>
+      <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SELL PET MODAL -->
+<div class="modal-overlay" id="sellOverlay" onclick="if(event.target===this)closeSellModal()">
+  <div class="sell-modal">
+    <button class="close-btn" onclick="closeSellModal()">✕</button>
+    <div style="text-align:center;margin-bottom:1.75rem;"><div style="font-size:2.2rem;margin-bottom:0.4rem;">🏷️</div><div style="font-size:1.5rem;font-weight:900;margin-bottom:0.2rem;">List a Pet for Sale</div><div style="color:var(--muted);font-size:0.85rem;font-weight:600;">Fill in the details and set your price.</div></div>
+    <div class="sell-preview"><div class="sell-preview-emoji" id="sellPreviewEmoji">🐾</div><div style="flex:1"><div style="font-weight:800;font-size:0.95rem;" id="sellPreviewName">Your Pet</div><div style="font-size:0.78rem;color:var(--muted);font-weight:700;margin-top:2px;" id="sellPreviewRarity">Select rarity</div></div><div style="font-size:1.2rem;font-weight:900;color:var(--text);" id="sellPreviewPrice"></div></div>
+    <div class="form-grid2"><div class="form-group"><label class="form-label">Pet Name *</label><input class="form-input" id="sellName" type="text" placeholder="e.g. Shadow Dragon" oninput="updateSellPreview();clearError('sellError')"></div><div class="form-group"><label class="form-label">Emoji / Icon</label><input class="form-input" id="sellEmoji" type="text" placeholder="🐉" maxlength="2" oninput="updateSellPreview()" style="text-align:center;font-size:1.2rem;"></div></div>
+    <div class="form-grid2"><div class="form-group"><label class="form-label">Rarity *</label><select class="form-input" id="sellRarity" onchange="updateSellPreview();clearError('sellError')"><option value="">Select rarity</option><option value="legendary">⭐ Legendary</option><option value="ultra-rare">💎 Ultra Rare</option><option value="rare">✨ Rare</option><option value="neon">🌈 Neon</option><option value="common">🐾 Common</option></select></div><div class="form-group"><label class="form-label">Age *</label><select class="form-input" id="sellAge" onchange="clearError('sellError')"><option value="">Select age</option><option>Newborn</option><option>Junior</option><option>Pre-Teen</option><option>Teen</option><option>Post-Teen</option><option>Full Grown</option></select></div></div>
+    <div class="form-group"><label class="form-label">Attributes</label><div style="display:flex;gap:0.5rem;flex-wrap:wrap;"><button class="tag-toggle" id="tagFly" onclick="toggleSellTag(this,'Fly')">🦅 Flyable</button><button class="tag-toggle" id="tagRide" onclick="toggleSellTag(this,'Ride')">🐴 Rideable</button><button class="tag-toggle" id="tagNeon" onclick="toggleSellTag(this,'Neon')">🌈 Neon</button><button class="tag-toggle" id="tagMega" onclick="toggleSellTag(this,'Mega Neon')">✨ Mega Neon</button></div></div>
+    <div class="form-group"><label class="form-label">Price (€) *</label><div style="position:relative;"><span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1rem;font-weight:800;color:var(--text2);">€</span><input class="form-input" id="sellPrice" type="number" placeholder="0" min="1" oninput="updateSellPreview();clearError('sellError')" style="padding-left:36px;font-weight:800;"></div></div>
+    <div class="form-group" style="margin-bottom:1.5rem;"><label class="form-label">Description (optional)</label><textarea class="form-input" id="sellDesc" placeholder="Add any extra details..." rows="2" style="resize:vertical;min-height:60px;"></textarea></div>
+    <div class="form-error" id="sellError"></div>
+    <div class="sell-actions"><button class="btn-cancel" onclick="closeSellModal()">Cancel</button><button class="btn-full" style="flex:1;margin-top:0;" onclick="doListPet()">🚀 List Pet for Sale</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastMsg"></span></div>
+
+<script>
+const CDN = 'https://cdn.playadopt.me/items/';
+const PRICE_MAX = 1000;
+const starAccents = { legendary:'#f59e0b','ultra-rare':'#7c3aed',rare:'#15803d',neon:'#be185d',common:'#9ca3af' };
+
+const pets = [
+  { id:1,  name:"Shadow Dragon",  imgUrl:CDN+"shadow_dragon.png",  emoji:"🐉", rarity:"legendary",  price:100, age:"Full Grown", flyable:true,  rideable:false, bg:"linear-gradient(135deg,#fff3c4,#fde68a)", demand:"Very High", offers:142, stock:true  },
+  { id:2,  name:"Unicorn",        imgUrl:CDN+"unicorn.png",         emoji:"🦄", rarity:"legendary",  price:85,  age:"Post-Teen",  flyable:true,  rideable:true,  bg:"linear-gradient(135deg,#fce7f3,#ede9fe)", demand:"High",      offers:89,  stock:true  },
+  { id:3,  name:"Frost Dragon",   imgUrl:CDN+"frost_dragon.png",    emoji:"❄️", rarity:"legendary",  price:120, age:"Full Grown", flyable:true,  rideable:false, bg:"linear-gradient(135deg,#dbeafe,#e0f2fe)", demand:"Very High", offers:118, stock:true  },
+  { id:4,  name:"Neon Butterfly", imgUrl:CDN+"butterfly.png",       emoji:"🦋", rarity:"neon",       price:55,  age:"Teen",       flyable:true,  rideable:false, bg:"linear-gradient(135deg,#fce7f3,#ede9fe)", demand:"Medium",    offers:54,  stock:true  },
+  { id:5,  name:"Frost Fox",      imgUrl:CDN+"arctic_fox.png",      emoji:"🦊", rarity:"ultra-rare", price:40,  age:"Newborn",    flyable:false, rideable:false, bg:"linear-gradient(135deg,#ede9fe,#dbeafe)", demand:"Medium",    offers:37,  stock:true  },
+  { id:6,  name:"Golden Dragon",  imgUrl:CDN+"golden_dragon.png",   emoji:"✨", rarity:"legendary",  price:200, age:"Full Grown", flyable:true,  rideable:true,  bg:"linear-gradient(135deg,#fff3c4,#fef9c3)", demand:"Very High", offers:201, stock:false },
+  { id:7,  name:"Wolf",           imgUrl:CDN+"wolf.png",            emoji:"🐺", rarity:"rare",       price:18,  age:"Junior",     flyable:false, rideable:true,  bg:"linear-gradient(135deg,#dcfce7,#d1fae5)", demand:"Low",       offers:21,  stock:true  },
+  { id:8,  name:"Sloth",          imgUrl:CDN+"sloth.png",           emoji:"🦥", rarity:"rare",       price:12,  age:"Pre-Teen",   flyable:false, rideable:false, bg:"linear-gradient(135deg,#dcfce7,#ecfccb)", demand:"Low",       offers:18,  stock:true  },
+  { id:9,  name:"Mega Neon Owl",  imgUrl:CDN+"owl.png",             emoji:"🦉", rarity:"neon",       price:75,  age:"Full Grown", flyable:true,  rideable:false, bg:"linear-gradient(135deg,#fce7f3,#fdf4ff)", demand:"High",      offers:76,  stock:true  },
+  { id:10, name:"Pink Cat",       imgUrl:CDN+"pink_cat.png",        emoji:"🐱", rarity:"ultra-rare", price:35,  age:"Teen",       flyable:false, rideable:false, bg:"linear-gradient(135deg,#fce7f3,#ede9fe)", demand:"Medium",    offers:44,  stock:true  },
+  { id:11, name:"Elephant",       imgUrl:CDN+"elephant.png",        emoji:"🐘", rarity:"common",     price:5,   age:"Junior",     flyable:false, rideable:true,  bg:"linear-gradient(135deg,#f3f4f6,#e5e7eb)", demand:"Low",       offers:9,   stock:true  },
+  { id:12, name:"Neon Dragon",    imgUrl:CDN+"dragon.png",          emoji:"🐲", rarity:"neon",       price:90,  age:"Full Grown", flyable:true,  rideable:true,  bg:"linear-gradient(135deg,#fdf4ff,#ede9fe)", demand:"High",      offers:93,  stock:true  },
+  { id:13, name:"Golden Lion",    imgUrl:CDN+"lion.png",            emoji:"🦁", rarity:"legendary",  price:150, age:"Full Grown", flyable:false, rideable:true,  bg:"linear-gradient(135deg,#fef3c7,#fde68a)", demand:"Very High", offers:167, stock:true  },
+  { id:14, name:"Bee",            imgUrl:CDN+"bee.png",             emoji:"🐝", rarity:"rare",       price:22,  age:"Post-Teen",  flyable:true,  rideable:false, bg:"linear-gradient(135deg,#fef3c7,#dcfce7)", demand:"Medium",    offers:29,  stock:true  },
+  { id:15, name:"Capybara",       imgUrl:CDN+"capybara.png",        emoji:"🐾", rarity:"common",     price:4,   age:"Newborn",    flyable:false, rideable:false, bg:"linear-gradient(135deg,#f3f4f6,#f0fdf4)", demand:"Low",       offers:6,   stock:true  },
+  { id:16, name:"Parrot",         imgUrl:CDN+"parrot.png",          emoji:"🦜", rarity:"ultra-rare", price:48,  age:"Full Grown", flyable:true,  rideable:false, bg:"linear-gradient(135deg,#dcfce7,#fce7f3)", demand:"High",      offers:58,  stock:true  },
+  { id:17, name:"Albino Monkey",  imgUrl:CDN+"albino_monkey.png",   emoji:"🐒", rarity:"legendary",  price:110, age:"Teen",       flyable:false, rideable:false, bg:"linear-gradient(135deg,#f5f5f4,#fef3c7)", demand:"High",      offers:104, stock:true  },
+  { id:18, name:"Golden Penguin", imgUrl:CDN+"golden_penguin.png",  emoji:"🐧", rarity:"ultra-rare", price:30,  age:"Junior",     flyable:false, rideable:false, bg:"linear-gradient(135deg,#dbeafe,#fef3c7)", demand:"Medium",    offers:41,  stock:false },
+  { id:19, name:"Neon Horse",     imgUrl:CDN+"horse.png",           emoji:"🐴", rarity:"neon",       price:65,  age:"Pre-Teen",   flyable:false, rideable:true,  bg:"linear-gradient(135deg,#ede9fe,#fce7f3)", demand:"High",      offers:67,  stock:true  },
+  { id:20, name:"Crocodile",      imgUrl:CDN+"crocodile.png",       emoji:"🐊", rarity:"rare",       price:10,  age:"Newborn",    flyable:false, rideable:true,  bg:"linear-gradient(135deg,#dcfce7,#d1fae5)", demand:"Low",       offers:14,  stock:true  },
+  { id:21, name:"Turtle",         imgUrl:CDN+"turtle.png",          emoji:"🐢", rarity:"rare",       price:8,   age:"Junior",     flyable:false, rideable:true,  bg:"linear-gradient(135deg,#d1fae5,#dcfce7)", demand:"Low",       offers:11,  stock:true  },
+  { id:22, name:"Panda",          imgUrl:CDN+"panda.png",           emoji:"🐼", rarity:"ultra-rare", price:42,  age:"Full Grown", flyable:false, rideable:false, bg:"linear-gradient(135deg,#f3f4f6,#ede9fe)", demand:"Medium",    offers:38,  stock:true  },
+  { id:23, name:"Rainbow Dragon", imgUrl:CDN+"rainbow_dragon.png",  emoji:"🌈", rarity:"neon",       price:95,  age:"Full Grown", flyable:true,  rideable:true,  bg:"linear-gradient(135deg,#fce7f3,#dbeafe)", demand:"Very High", offers:189, stock:true  },
+  { id:24, name:"Dodo",           imgUrl:CDN+"dodo.png",            emoji:"🐦", rarity:"legendary",  price:130, age:"Teen",       flyable:true,  rideable:false, bg:"linear-gradient(135deg,#ecfccb,#dbeafe)", demand:"High",      offers:131, stock:true  },
+];
+
+const rarityClass   = { legendary:'rb-legendary','ultra-rare':'rb-ultra-rare',rare:'rb-rare',neon:'rb-neon',common:'rb-common' };
+const rarityLabel   = { legendary:'⭐ Legendary','ultra-rare':'💎 Ultra Rare',rare:'✨ Rare',neon:'🌈 Neon',common:'🐾 Common' };
+const rarityNeonColor = { legendary:'#b45309','ultra-rare':'#7c3aed',rare:'#15803d',neon:'#be185d',common:'#6b7280' };
+
+let currentSort    = 'popular';
+let topFilter      = 'hot';
+let activeProps    = new Set();
+let activeRarities = new Set();
+let activeAge      = null;
+let currentUser    = null;
+let sellTags       = [];
+
+// ── DATA STORES ───────────────────────────────────────────────────────────────
+let wishlist  = [];   // array of pet ids
+let cart      = [];   // array of { pet, qty }
+let inventory = [];   // array of purchased pets
+
+// ── PAGE NAVIGATION ───────────────────────────────────────────────────────────
+let currentPage = 'marketplace';
+const marketplaceEl = () => document.getElementById('marketplaceView');
+
+function showPage(page, navEl) {
+  currentPage = page;
+  const mpSections = ['filterBar','searchBar','layoutView'];
+  mpSections.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = page === 'marketplace' ? '' : 'none';
+  });
+  document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+  if(page !== 'marketplace') {
+    const pv = document.getElementById('page' + page.charAt(0).toUpperCase() + page.slice(1));
+    if(pv) { pv.classList.add('active'); renderPage(page); }
+  }
+  // highlight Marketplace nav link when on marketplace
+  document.querySelectorAll('#mainNav a').forEach(a => a.classList.remove('active'));
+  if(page === 'marketplace') {
+    const mp = document.querySelector('#mainNav a');
+    if(mp) mp.classList.add('active');
+  }
+}
+
+function renderPage(page) {
+  if(page === 'wishlist')   renderWishlist();
+  if(page === 'cart')       renderCart();
+  if(page === 'inventory')  renderInventory();
+}
+
+// ── WISHLIST PAGE ─────────────────────────────────────────────────────────────
+function renderWishlist() {
+  const cont = document.getElementById('wlContent');
+  const sub  = document.getElementById('wlSubtitle');
+  if(!wishlist.length) {
+    sub.textContent = '0 pets saved';
+    cont.innerHTML = `<div class="page-empty"><div class="page-empty-icon">❤️</div><h3>Your wishlist is empty</h3><p>Press the ❤️ on any pet to save it here.</p><button class="btn btn-primary" onclick="showPage('marketplace', document.querySelector('#mainNav a'))">Browse Pets</button></div>`;
+    return;
+  }
+  const wlPets = wishlist.map(id => pets.find(p => p.id === id)).filter(Boolean);
+  sub.textContent = wlPets.length + ' pet' + (wlPets.length!==1?'s':'') + ' saved';
+  cont.innerHTML = '<div class="page-grid">' + wlPets.map(p => {
+    const sc = starAccents[p.rarity] || '#7c4dff';
+    return `<div class="pet-card ${!p.stock?'out-of-stock':''}" onclick="openModal(${p.id})">
+      <div class="card-img" style="background:${p.bg}">
+        <div class="card-img-stars">${generateStars(sc)}</div>
+        <button class="wl-card-remove" onclick="event.stopPropagation();removeFromWishlist(${p.id})" title="Remove">✕</button>
+        <img class="card-img-pet" src="${p.imgUrl}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="card-img-emoji">${p.emoji}</span>
+        ${!p.stock ? '<div class="hot-badge">Sold Out</div>' : ''}
+      </div>
+      <div class="card-info">
+        <div class="card-price-row"><div class="price-main">${formatPrice(p.price)}</div></div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-rarity-row">
+          <span class="neon-badge" style="background:${rarityNeonColor[p.rarity]}">${p.rarity==='neon'?'N':p.rarity==='legendary'?'L':p.rarity==='ultra-rare'?'U':p.rarity==='rare'?'R':'C'}</span>
+          <span class="rarity-badge ${rarityClass[p.rarity]}">${rarityLabel[p.rarity]}</span>
+        </div>
+        <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${p.id})">${p.stock?'🛒 Add to Cart':'Out of Stock'}</button>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function removeFromWishlist(id) {
+  wishlist = wishlist.filter(x => x !== id);
+  updateWishlistBadge();
+  renderWishlist();
+  // update heart on marketplace cards
+  refreshHeartButtons();
+  showToast('🤍', 'Removed from wishlist');
+}
+
+function refreshHeartButtons() {
+  document.querySelectorAll('.wishlist-btn[data-id]').forEach(btn => {
+    const id = parseInt(btn.dataset.id);
+    const inWl = wishlist.includes(id);
+    btn.textContent = inWl ? '❤️' : '🤍';
+    btn.classList.toggle('wishlisted', inWl);
+  });
+}
+
+function updateWishlistBadge() {
+  const badge = document.getElementById('wlBadge');
+  if(badge) { badge.textContent = wishlist.length; badge.style.display = wishlist.length ? 'flex' : 'none'; }
+}
+
+// ── CART PAGE ─────────────────────────────────────────────────────────────────
+function renderCart() {
+  const cont = document.getElementById('cartContent');
+  const sub  = document.getElementById('cartSubtitle');
+  if(!cart.length) {
+    sub.textContent = '0 items';
+    cont.innerHTML = `<div class="page-empty"><div class="page-empty-icon">🛒</div><h3>Your cart is empty</h3><p>Add pets to cart from the marketplace.</p><button class="btn btn-primary" onclick="showPage('marketplace', document.querySelector('#mainNav a'))">Browse Pets</button></div>`;
+    return;
+  }
+  const total = cart.reduce((s, i) => s + i.pet.price * i.qty, 0);
+  sub.textContent = cart.length + ' item' + (cart.length!==1?'s':'');
+  const itemsHtml = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img" style="background:${item.pet.bg}">${item.pet.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.pet.name}</div>
+        <div class="cart-item-meta">${rarityLabel[item.pet.rarity] || item.pet.rarity} · ${item.pet.age}${item.pet.flyable?' · 🦅 Fly':''}${item.pet.rideable?' · 🐴 Ride':''}</div>
+      </div>
+      <span class="cart-item-price">${formatPrice(item.pet.price * item.qty)}</span>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.pet.id})" title="Remove">✕</button>
+    </div>`).join('');
+  cont.innerHTML = `<div class="cart-layout">
+    <div class="cart-items">${itemsHtml}</div>
+    <div class="cart-summary">
+      <div class="cart-summary-title">🧾 Order Summary</div>
+      ${cart.map(i => `<div class="cart-summary-row"><span>${i.pet.name} ×${i.qty}</span><span>${formatPrice(i.pet.price * i.qty)}</span></div>`).join('')}
+      <div class="cart-summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
+      <button class="cart-checkout" onclick="doCheckout()">✅ Checkout (${formatPrice(total)})</button>
+    </div>
+  </div>`;
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(i => i.pet.id !== id);
+  updateCartBadge();
+  renderCart();
+  showToast('🗑️', 'Removed from cart');
+}
+
+function doCheckout() {
+  if(!cart.length) return;
+  cart.forEach(item => {
+    if(!inventory.find(i => i.id === item.pet.id)) inventory.push(item.pet);
+  });
+  cart = [];
+  updateCartBadge();
+  showToast('🎉', 'Purchase complete! Check your Inventory.');
+  renderCart();
+}
+
+function updateCartBadge() {
+  const badge = document.getElementById('cartBadge');
+  const total = cart.reduce((s,i) => s + i.qty, 0);
+  if(badge) { badge.textContent = total; badge.style.display = total ? 'flex' : 'none'; }
+}
+
+// ── INVENTORY PAGE ────────────────────────────────────────────────────────────
+function renderInventory() {
+  const cont = document.getElementById('invContent');
+  const sub  = document.getElementById('invSubtitle');
+  if(!inventory.length) {
+    sub.textContent = '0 pets owned';
+    cont.innerHTML = `<div class="page-empty"><div class="page-empty-icon">🎒</div><h3>Your inventory is empty</h3><p>Buy pets from the marketplace to see them here.</p><button class="btn btn-primary" onclick="showPage('marketplace', document.querySelector('#mainNav a'))">Browse Pets</button></div>`;
+    return;
+  }
+  sub.textContent = inventory.length + ' pet' + (inventory.length!==1?'s':'') + ' owned';
+  cont.innerHTML = '<div class="inv-items-grid">' + inventory.map(p => `
+    <div class="inv-item">
+      <div class="inv-item-img" style="background:${p.bg}">${p.emoji}</div>
+      <div class="inv-item-info">
+        <div class="inv-item-name">${p.name}</div>
+        <div class="inv-item-meta">${rarityLabel[p.rarity]||p.rarity} · ${p.age}${p.flyable?' · 🦅 Fly':''}${p.rideable?' · 🐴 Ride':''}</div>
+      </div>
+      <span class="inv-badge">✅ Owned</span>
+    </div>`).join('') + '</div>';
+}
+
+// ── DUAL RANGE SLIDER ────────────────────────────────────────────────────────
+function updateRangeFill() {
+  const min = parseInt(document.getElementById('rangeMin').value);
+  const max = parseInt(document.getElementById('rangeMax').value);
+  const pct1 = (min / PRICE_MAX) * 100;
+  const pct2 = (max / PRICE_MAX) * 100;
+  document.getElementById('rangeFill').style.left  = pct1 + '%';
+  document.getElementById('rangeFill').style.width = (pct2 - pct1) + '%';
+}
+function onRangeMin() {
+  const minEl = document.getElementById('rangeMin'), maxEl = document.getElementById('rangeMax');
+  if(parseInt(minEl.value) > parseInt(maxEl.value)) minEl.value = maxEl.value;
+  document.getElementById('priceFrom').value = minEl.value;
+  updateRangeFill(); applyAllFilters();
+}
+function onRangeMax() {
+  const minEl = document.getElementById('rangeMin'), maxEl = document.getElementById('rangeMax');
+  if(parseInt(maxEl.value) < parseInt(minEl.value)) maxEl.value = minEl.value;
+  document.getElementById('priceTo').value = maxEl.value;
+  updateRangeFill(); applyAllFilters();
+}
+function syncSliderFromInputs() {
+  let from = parseInt(document.getElementById('priceFrom').value)||0;
+  let to   = parseInt(document.getElementById('priceTo').value)||PRICE_MAX;
+  from = Math.max(0, Math.min(from, PRICE_MAX)); to = Math.max(0, Math.min(to, PRICE_MAX));
+  if(from > to) from = to;
+  document.getElementById('rangeMin').value = from; document.getElementById('rangeMax').value = to;
+  updateRangeFill(); applyAllFilters();
+}
+
+// ── RARITY COUNTS ─────────────────────────────────────────────────────────────
+function updateRarityCounts() {
+  ['common','uncommon','rare','ultra-rare','legendary','neon'].forEach(r => {
+    const el = document.getElementById('cnt-'+r);
+    if(el) el.textContent = pets.filter(p => p.rarity === r).length;
+  });
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function applyAllFilters() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const priceFrom = parseFloat(document.getElementById('priceFrom').value)||0;
+  const priceTo   = parseFloat(document.getElementById('priceTo').value)||Infinity;
+  let data = pets.filter(p => {
+    if(q && !p.name.toLowerCase().includes(q)) return false;
+    if(p.price < priceFrom || p.price > priceTo) return false;
+    if(topFilter === 'hot'  && !p.stock)    return false;
+    if(topFilter === 'fly'  && !p.flyable)  return false;
+    if(topFilter === 'ride' && !p.rideable) return false;
+    if(['legendary','ultra-rare','rare','neon','common'].includes(topFilter) && p.rarity !== topFilter) return false;
+    if(activeProps.size > 0) {
+      const match = activeProps.has('default') || (activeProps.has('neon') && p.rarity==='neon') ||
+        (activeProps.has('mega') && p.rarity==='neon') || (activeProps.has('fly') && p.flyable) || (activeProps.has('ride') && p.rideable);
+      if(!match) return false;
+    }
+    if(activeRarities.size > 0 && !activeRarities.has(p.rarity)) return false;
+    if(activeAge && p.age !== activeAge) return false;
+    return true;
+  });
+  if(currentSort==='price-asc')  data.sort((a,b)=>a.price-b.price);
+  else if(currentSort==='price-desc') data.sort((a,b)=>b.price-a.price);
+  else if(currentSort==='newest') data.sort((a,b)=>b.id-a.id);
+  else data.sort((a,b)=>b.offers-a.offers);
+  renderCards(data); renderActiveFilters();
+}
+
+function setTopFilter(filter, el) {
+  topFilter = filter;
+  document.querySelectorAll('.filter-bar .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active'); applyAllFilters();
+}
+function toggleProp(prop) {
+  const box = document.getElementById('prop-'+prop);
+  if(activeProps.has(prop)){activeProps.delete(prop);box.classList.remove('checked');}
+  else{activeProps.add(prop);box.classList.add('checked');}
+  applyAllFilters();
+}
+function resetProperties() {
+  activeProps.clear();
+  ['default','neon','mega','fly','ride'].forEach(p=>{const b=document.getElementById('prop-'+p);if(b)b.classList.remove('checked');});
+  applyAllFilters();
+}
+function toggleRarity(r) {
+  const box = document.getElementById('rar-'+r);
+  if(activeRarities.has(r)){activeRarities.delete(r);box.classList.remove('checked');}
+  else{activeRarities.add(r);box.classList.add('checked');}
+  applyAllFilters();
+}
+function resetRarities() {
+  activeRarities.clear();
+  ['common','uncommon','rare','ultra-rare','legendary','neon'].forEach(r=>{const b=document.getElementById('rar-'+r);if(b)b.classList.remove('checked');});
+  applyAllFilters();
+}
+function selectAge(age, el) {
+  if(activeAge===age){activeAge=null;el.classList.remove('active');}
+  else{if(activeAge){const old=document.getElementById('age-'+activeAge);if(old)old.classList.remove('active');}activeAge=age;el.classList.add('active');}
+  applyAllFilters();
+}
+function resetAge() {
+  if(activeAge){const old=document.getElementById('age-'+activeAge);if(old)old.classList.remove('active');}
+  activeAge=null; applyAllFilters();
+}
+function resetPriceFilter() {
+  document.getElementById('priceFrom').value=0; document.getElementById('priceTo').value=1000;
+  document.getElementById('rangeMin').value=0; document.getElementById('rangeMax').value=1000;
+  updateRangeFill(); applyAllFilters();
+}
+
+function renderActiveFilters() {
+  const cont = document.getElementById('activeFilters'); if(!cont) return;
+  const tags = [];
+  if(topFilter !== 'all' && topFilter !== 'hot') tags.push({ label: topFilter, key: 'top' });
+  activeRarities.forEach(r => tags.push({ label: rarityLabel[r]||r, key:'rar-'+r }));
+  activeProps.forEach(p => tags.push({ label: p, key:'prop-'+p }));
+  if(activeAge) tags.push({ label: activeAge, key:'age' });
+  const from = parseInt(document.getElementById('priceFrom').value)||0;
+  const to   = parseInt(document.getElementById('priceTo').value)||PRICE_MAX;
+  if(from > 0 || to < PRICE_MAX) tags.push({ label: formatPrice(from)+' – '+formatPrice(to), key:'price' });
+  cont.innerHTML = tags.map(t => `<span class="active-filter-tag" onclick="removeFilter('${t.key}')">${t.label} <span class="remove-tag">✕</span></span>`).join('');
+  document.getElementById('sortLabel').textContent = 'Sorting: ' +
+    (currentSort==='price-asc'?'Price ↑':currentSort==='price-desc'?'Price ↓':currentSort==='newest'?'Newest':'🔥 Popular first');
+}
+
+function removeFilter(key) {
+  if(key==='top'){ topFilter='all'; document.querySelectorAll('.filter-bar .pill').forEach(p=>p.classList.remove('active')); document.getElementById('pill-all').classList.add('active'); }
+  else if(key.startsWith('rar-')){ const r=key.slice(4); activeRarities.delete(r); const b=document.getElementById('rar-'+r); if(b)b.classList.remove('checked'); }
+  else if(key.startsWith('prop-')){ const p=key.slice(5); activeProps.delete(p); const b=document.getElementById('prop-'+p); if(b)b.classList.remove('checked'); }
+  else if(key==='age'){ resetAge(); return; }
+  else if(key==='price'){ resetPriceFilter(); return; }
+  applyAllFilters();
+}
+
+function generateStars(color) {
+  return Array.from({length:6},(_,i)=>`<svg class="star-svg" style="left:${10+i*15}%;top:${10+((i*37)%70)}%;width:${8+i%3*4}px;height:${8+i%3*4}px;opacity:${0.3+i%3*0.15}" viewBox="0 0 24 24" fill="${color}"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg>`).join('');
+}
+function formatPrice(n) { return '€' + Number(n).toLocaleString(); }
+
+function renderCards(data) {
+  const grid = document.getElementById('cardsGrid');
+  document.getElementById('countBadge').textContent = data.length + ' items';
+  if(!data.length){ grid.innerHTML=`<div class="no-results"><div class="no-results-emoji">🔍</div><h3>No pets found</h3><p>Try adjusting your filters or search query.</p></div>`; return; }
+  grid.innerHTML = data.map(p => {
+    const sc = starAccents[p.rarity]||'#7c4dff';
+    const inWl = wishlist.includes(p.id);
+    return `
+    <div class="pet-card ${!p.stock?'out-of-stock':''}" onclick="openModal(${p.id})">
+      <div class="card-img" style="background:${p.bg}">
+        <div class="card-img-stars">${generateStars(sc)}</div>
+        <button class="wishlist-btn ${inWl?'wishlisted':''}" data-id="${p.id}" onclick="event.stopPropagation();toggleWishlist(${p.id},this)">${inWl?'❤️':'🤍'}</button>
+        <img class="card-img-pet" src="${p.imgUrl}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="card-img-emoji">${p.emoji}</span>
+        ${!p.stock?'<div class="hot-badge">Sold Out</div>':'<div class="hot-badge">Hot Price</div>'}
+      </div>
+      <div class="card-info">
+        <div class="card-price-row"><div class="price-main">${formatPrice(p.price)}</div><div class="price-old">${formatPrice(Math.round(p.price*1.43))}</div></div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-rarity-row">
+          <span class="neon-badge" style="background:${rarityNeonColor[p.rarity]}">${p.rarity==='neon'?'N':p.rarity==='legendary'?'L':p.rarity==='ultra-rare'?'U':p.rarity==='rare'?'R':'C'}</span>
+          <span class="rarity-badge ${rarityClass[p.rarity]}">${rarityLabel[p.rarity]}</span>
+          ${p.flyable?'<span style="font-size:0.7rem;color:#3b82f6;font-weight:700;">🦅</span>':''}
+          ${p.rideable?'<span style="font-size:0.7rem;color:#15803d;font-weight:700;">🐴</span>':''}
+        </div>
+        <button class="add-to-cart" onclick="event.stopPropagation();addToCart(${p.id})">🛒 ${p.stock?'Add to Cart':'Out of Stock'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── WISHLIST TOGGLE ───────────────────────────────────────────────────────────
+function toggleWishlist(id, btn) {
+  if(!currentUser) { openAuthModal('login'); showToast('⚠️','Please log in to save pets.'); return; }
+  if(wishlist.includes(id)) {
+    wishlist = wishlist.filter(x => x !== id);
+    if(btn){ btn.textContent='🤍'; btn.classList.remove('wishlisted'); }
+    showToast('🤍', 'Removed from wishlist');
+  } else {
+    wishlist.push(id);
+    if(btn){ btn.textContent='❤️'; btn.classList.add('wishlisted'); }
+    showToast('❤️', 'Added to wishlist!');
+  }
+  updateWishlistBadge();
+}
+
+// ── ADD TO CART ───────────────────────────────────────────────────────────────
+function addToCart(id) {
+  if(!currentUser) { openAuthModal('login'); showToast('⚠️','Please log in to add to cart.'); return; }
+  const p = pets.find(x => x.id === id); if(!p || !p.stock) return;
+  const existing = cart.find(i => i.pet.id === id);
+  if(existing) existing.qty++; else cart.push({ pet:p, qty:1 });
+  updateCartBadge();
+  showToast('🛒', p.name + ' added to cart!');
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(id) {
+  const p = pets.find(x => x.id === id); if(!p) return;
+  const mi = document.getElementById('modalPetImg'), me = document.getElementById('modalEmoji');
+  mi.src = p.imgUrl; mi.alt = p.name; mi.style.display = 'none'; me.textContent = p.emoji; me.style.display = 'block';
+  mi.onload = () => { mi.style.display='block'; me.style.display='none'; };
+  mi.onerror = () => { mi.style.display='none'; me.style.display='block'; };
+  document.getElementById('modalBg').style.background = p.bg;
+  document.getElementById('modalName').textContent  = p.name;
+  document.getElementById('modalPrice').textContent = formatPrice(p.price);
+  document.getElementById('mAge').textContent    = p.age;
+  document.getElementById('mDemand').textContent = p.demand;
+  document.getElementById('mOffers').textContent = p.offers;
+  document.getElementById('modalTags').innerHTML = `<span class="rarity-badge ${rarityClass[p.rarity]}">${rarityLabel[p.rarity]}</span>${p.flyable?'<span class="rarity-badge rb-common">🦅 Flyable</span>':''}${p.rideable?'<span class="rarity-badge rb-rare">🐴 Rideable</span>':''}`;
+  const h = Array.from({length:14},()=>Math.round(8+Math.random()*28));
+  document.getElementById('sparkline').innerHTML = h.map(v=>`<div class="spark-bar" style="height:${v}px"></div>`).join('');
+  const b = document.getElementById('modalBuyBtn');
+  b.textContent = p.stock ? `🛒 Buy for ${formatPrice(p.price)}` : 'Out of Stock';
+  b.onclick = p.stock ? () => { closeModal(); addToCart(p.id); } : null;
+  b.style.opacity = p.stock?'1':'0.5'; b.style.cursor = p.stock?'pointer':'not-allowed';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function openAuthModal(tab) { switchTab(tab||'login'); document.getElementById('authOverlay').classList.add('open'); }
+function closeAuthModal()   { document.getElementById('authOverlay').classList.remove('open'); }
+function switchTab(tab) {
+  const l = tab==='login';
+  document.getElementById('formLogin').style.display  = l?'block':'none';
+  document.getElementById('formSignup').style.display = l?'none':'block';
+  document.getElementById('tabLogin').className  = 'auth-tab '+(l?'active':'inactive');
+  document.getElementById('tabSignup').className = 'auth-tab '+(l?'inactive':'active');
+}
+function togglePass(id){ const e=document.getElementById(id); e.type=e.type==='password'?'text':'password'; }
+function clearError(id){ document.getElementById(id).style.display='none'; }
+
+function doLogin() {
+  const em=document.getElementById('loginEmail').value.trim(), pw=document.getElementById('loginPass').value, err=document.getElementById('loginError');
+  if(!em||!pw){ err.textContent='⚠️ Please fill in all fields.'; err.style.display='block'; return; }
+  if(pw.length<4){ err.textContent='⚠️ Password too short.'; err.style.display='block'; return; }
+  currentUser = { username: em.includes('@') ? em.split('@')[0] : em };
+  closeAuthModal(); updateNavLoggedIn(); showToast('✅', 'Welcome back, ' + currentUser.username + '!');
+}
+function doSignup() {
+  const u=document.getElementById('signupUser').value.trim(), em=document.getElementById('signupEmail').value.trim(), pw=document.getElementById('signupPass').value, err=document.getElementById('signupError');
+  if(!u||!em||!pw){ err.textContent='⚠️ Please fill in all required fields.'; err.style.display='block'; return; }
+  if(pw.length<6){ err.textContent='⚠️ Password must be at least 6 characters.'; err.style.display='block'; return; }
+  if(!em.includes('@')){ err.textContent='⚠️ Please enter a valid email.'; err.style.display='block'; return; }
+  currentUser = { username: u }; closeAuthModal(); updateNavLoggedIn(); showToast('🎉', 'Account created! Welcome, ' + u + '!');
+}
+
+function updateNavLoggedIn() {
+  document.getElementById('headerRight').innerHTML = `
+    <div class="header-nav-icons">
+      <button class="hni-btn" title="Inventory" onclick="showPage('inventory', null)">
+        <span class="hni-icon">🎒</span><span class="hni-label">Inventory</span>
+      </button>
+      <button class="hni-btn" title="Wishlist" onclick="showPage('wishlist', null)">
+        <span class="hni-icon">❤️</span><span class="hni-label">Wishlist</span>
+        <span class="hni-badge" id="wlBadge" style="display:none">0</span>
+      </button>
+      <button class="hni-btn" title="Cart" onclick="showPage('cart', null)">
+        <span class="hni-icon">🛒</span><span class="hni-label">Cart</span>
+        <span class="hni-badge" id="cartBadge" style="display:none">0</span>
+      </button>
+    </div>
+    <div class="hni-avatar" title="${currentUser.username}">😊</div>
+    <div class="coins-badge">0</div>
+    <button class="btn btn-primary" onclick="openSellModal()">+ Sell Pet</button>`;
+}
+
+// ── SELL ──────────────────────────────────────────────────────────────────────
+function openSellModal() {
+  if(!currentUser){ openAuthModal('login'); showToast('⚠️','Please log in to sell pets.'); return; }
+  sellTags=[];
+  ['tagFly','tagRide','tagNeon','tagMega'].forEach(id=>{const e=document.getElementById(id);if(e)e.className='tag-toggle';});
+  ['sellName','sellEmoji','sellPrice','sellDesc'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('sellRarity').value=''; document.getElementById('sellAge').value='';
+  document.getElementById('sellError').style.display='none';
+  updateSellPreview(); document.getElementById('sellOverlay').classList.add('open');
+}
+function closeSellModal() { document.getElementById('sellOverlay').classList.remove('open'); }
+function toggleSellTag(el,tag){ const i=sellTags.indexOf(tag);if(i>-1){sellTags.splice(i,1);el.className='tag-toggle';}else{sellTags.push(tag);el.className='tag-toggle on';} }
+function updateSellPreview() {
+  const n=document.getElementById('sellName').value||'Your Pet',e=document.getElementById('sellEmoji').value||'🐾',r=document.getElementById('sellRarity').value,p=document.getElementById('sellPrice').value;
+  document.getElementById('sellPreviewEmoji').textContent=e;
+  document.getElementById('sellPreviewName').textContent=n;
+  document.getElementById('sellPreviewRarity').textContent=r?rarityLabel[r]||r:'Select rarity';
+  document.getElementById('sellPreviewPrice').textContent=p?'€'+Number(p).toLocaleString():'';
+}
+function doListPet() {
+  const n=document.getElementById('sellName').value.trim(),e=document.getElementById('sellEmoji').value.trim(),r=document.getElementById('sellRarity').value,a=document.getElementById('sellAge').value,p=parseInt(document.getElementById('sellPrice').value),err=document.getElementById('sellError');
+  if(!n){err.textContent='⚠️ Pet name is required.';err.style.display='block';return;}
+  if(!r){err.textContent='⚠️ Please select a rarity.';err.style.display='block';return;}
+  if(!a){err.textContent='⚠️ Please select an age.';err.style.display='block';return;}
+  if(!p||p<1){err.textContent='⚠️ Please enter a valid price.';err.style.display='block';return;}
+  pets.unshift({id:pets.length+1,name:n,emoji:e||'🐾',imgUrl:CDN+n.toLowerCase().replace(/ /g,'_')+'.png',rarity:r,age:a,price:p,flyable:sellTags.includes('Fly'),rideable:sellTags.includes('Ride'),bg:'linear-gradient(135deg,#f3f4f6,#ede9fe)',demand:'New',offers:0,stock:true});
+  closeSellModal(); updateRarityCounts(); applyAllFilters(); showToast('🚀',n+' listed for sale!');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(icon, msg) {
+  document.getElementById('toastIcon').textContent=icon; document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast'); t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+document.addEventListener('keydown', e=>{if(e.key==='Escape'){closeModal();closeAuthModal();closeSellModal();}});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+// Add ids to marketplace sections for show/hide
+document.addEventListener('DOMContentLoaded', () => {
+  const fb = document.querySelector('.filter-bar'); if(fb) fb.id='filterBar';
+  const sb = document.querySelector('.search-bar'); if(sb) sb.id='searchBar';
+  const lv = document.querySelector('.layout');     if(lv) lv.id='layoutView';
+});
+updateRarityCounts();
+updateRangeFill();
+applyAllFilters();
+</script>
+</body>
+</html>
